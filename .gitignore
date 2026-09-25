@@ -1,0 +1,4 @@
+node_modules/
+.envbackend/cookies.txt
+backend/cookies.txt
+backend/.env
