@@ -1,47 +1,10 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-}
-
-.container {
-  width: 350px;
-  margin: 80px auto;
-  text-align: center;
-}
-
-h1 {
-  color: #ff0066;
-}
-
-.card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px #0002;
-}
-
-input {
-  display: block;
-  width: 100%;
+/* Base CSS Reset */
+*, *::before, *::after {
   box-sizing: border-box;
-  padding: 12px;
-  margin: 12px 0;
-  border: 1px solid #ddd;
-  border-radius: 6px;
 }
 
-button {
-  padding: 10px 16px;
-  margin: 6px;
-  border: none;
-  border-radius: 6px;
-  background: #ff0066;
-  color: white;
-  cursor: pointer;
-}
-
-.message {
-  color: #333;
-  min-height: 20px;
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
 }
