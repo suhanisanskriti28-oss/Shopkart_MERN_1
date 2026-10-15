@@ -6,7 +6,7 @@ import {
   Routes,
   Route,
   Navigate,
-  Link
+  Link,
 } from "react-router-dom";
 
 import ProductList from "./pages/ProductList";
@@ -20,7 +20,7 @@ import MyOrders from "./pages/MyOrders";
 
 import {
   CartProvider,
-  useCart
+  useCart,
 } from "./context/CartContext";
 
 const API = "http://localhost:8089";
@@ -33,7 +33,7 @@ function AuthPage() {
 
   const [passwordForm, setPasswordForm] = useState({
     oldPassword: "",
-    newPassword: ""
+    newPassword: "",
   });
 
   const { refreshCart, clearCart } = useCart();
@@ -41,7 +41,7 @@ function AuthPage() {
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -51,9 +51,9 @@ function AuthPage() {
       const response = await fetch(`${API}/customers/register`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
 
       const data = await response.json();
@@ -75,10 +75,10 @@ function AuthPage() {
       const response = await fetch(`${API}/customers/login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
 
       const data = await response.json();
@@ -101,7 +101,7 @@ function AuthPage() {
   const getProfile = async () => {
     try {
       const response = await fetch(`${API}/customers/me`, {
-        credentials: "include"
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -120,20 +120,26 @@ function AuthPage() {
     }
   };
 
-  // Logout and clear the previous customer's cart from the UI
+  // Logout and clear the cart from the UI
   const logout = async () => {
     try {
       const response = await fetch(`${API}/customers/logout`, {
         method: "POST",
-        credentials: "include"
+        credentials: "include",
       });
 
       const data = await response.json();
 
       setMessage(data.message || "Logged out");
-      setCustomer(null);
-      setPage("login");
-      clearCart();
+
+      if (response.ok) {
+        setCustomer(null);
+        setPage("login");
+        setForm({});
+        clearCart();
+      } else {
+        setMessage(data.message || "Unable to log out");
+      }
     } catch (error) {
       setMessage("Unable to connect to server");
     }
@@ -147,10 +153,10 @@ function AuthPage() {
         {
           method: "PATCH",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify(passwordForm)
+          body: JSON.stringify(passwordForm),
         }
       );
 
@@ -161,7 +167,7 @@ function AuthPage() {
       if (response.ok) {
         setPasswordForm({
           oldPassword: "",
-          newPassword: ""
+          newPassword: "",
         });
 
         setPage("profile");
@@ -296,6 +302,10 @@ function AuthPage() {
               🛒 My Cart
             </Link>
 
+            <Link to="/my-orders" className="details-button">
+              📦 My Orders
+            </Link>
+
             <button onClick={logout}>Logout</button>
           </div>
         )}
@@ -311,7 +321,7 @@ function AuthPage() {
               onChange={(e) =>
                 setPasswordForm({
                   ...passwordForm,
-                  oldPassword: e.target.value
+                  oldPassword: e.target.value,
                 })
               }
             />
@@ -323,7 +333,7 @@ function AuthPage() {
               onChange={(e) =>
                 setPasswordForm({
                   ...passwordForm,
-                  newPassword: e.target.value
+                  newPassword: e.target.value,
                 })
               }
             />
@@ -349,30 +359,16 @@ function App() {
         <Routes>
           <Route path="/" element={<AuthPage />} />
 
-          <Route
-            path="/products"
-            element={<ProductList />}
-          />
+          <Route path="/products" element={<ProductList />} />
 
           <Route
             path="/products/:id"
             element={<ProductDetails />}
           />
 
-          <Route
-            path="/wishlist"
-            element={<Wishlist />}
-          />
+          <Route path="/wishlist" element={<Wishlist />} />
 
-          <Route
-            path="/cart"
-            element={<Cart />}
-          />
-
-          <Route
-            path="*"
-            element={<Navigate to="/" />}
-          />
+          <Route path="/cart" element={<Cart />} />
 
           <Route path="/checkout" element={<Checkout />} />
 
@@ -382,6 +378,11 @@ function App() {
           />
 
           <Route path="/my-orders" element={<MyOrders />} />
+
+          <Route
+            path="*"
+            element={<Navigate to="/" replace />}
+          />
         </Routes>
       </BrowserRouter>
     </CartProvider>

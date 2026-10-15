@@ -816,3 +816,25 @@ a {
     margin: 10px 16px 40px;
   }
 }
+
+/* Cart product image sizing */
+.cart-item-image {
+  width: 120px;
+  height: 120px;
+  max-width: 100%;
+  object-fit: contain;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.cart-item-details {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .cart-item-image {
+    width: 90px;
+    height: 90px;
+  }
+}

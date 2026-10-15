@@ -76,8 +76,51 @@ const getProductById = async (req, res) => {
 };
 
 
+const updateProductImage = async (req, res) => {
+  try {
+    const { image } = req.body;
+
+    if (typeof image !== "string" || !image.trim()) {
+      return res.status(400).json({
+        message: "A valid image URL is required",
+      });
+    }
+
+    if (!/^https?:\/\/\S+$/i.test(image.trim())) {
+      return res.status(400).json({
+        message: "Image must be a valid HTTP or HTTPS URL",
+      });
+    }
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      { $set: { image: image.trim() } },
+      { new: true, runValidators: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Product image updated successfully",
+      product,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Failed to update product image",
+      error: error.message,
+    });
+  }
+};
+
+
+
 module.exports = {
   createProduct,
   getAllProducts,
-  getProductById
+  getProductById,
+  updateProductImage,
 };
